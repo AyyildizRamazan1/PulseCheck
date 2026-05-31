@@ -1,0 +1,91 @@
+# ============================================================
+# PULSECHECK — CORPORATE .gitignore
+# ============================================================
+
+# ------------------------------------------------------------
+# IDE & Editors
+# ------------------------------------------------------------
+.idea/
+.vscode/
+*.iws
+*.iml
+*.ipr
+*.iws
+.project
+.classpath
+.settings/
+*.swp
+*.swo
+*~
+
+# ------------------------------------------------------------
+# Java / Maven (Backend)
+# ------------------------------------------------------------
+backend/target/
+*.class
+*.jar
+*.war
+*.ear
+*.nar
+hs_err_pid*
+replay_pid*
+
+# ------------------------------------------------------------
+# Node.js / NPM / Frontend
+# ------------------------------------------------------------
+node_modules/
+frontend/node_modules/
+frontend/dist/
+frontend/build/
+frontend/.next/
+frontend/.nuxt/
+frontend/.output/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+.yarn/
+.pnp.*
+
+# ------------------------------------------------------------
+# Secrets & Environment Variables
+# ------------------------------------------------------------
+.env
+.env.*
+!.env.example
+backend/src/main/resources/application-local.yml
+backend/src/main/resources/application-secrets.yml
+
+# ------------------------------------------------------------
+# Docker
+# ------------------------------------------------------------
+.docker/
+
+# ------------------------------------------------------------
+# OS & System Files
+# ------------------------------------------------------------
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
+
+# ------------------------------------------------------------
+# Logs & Temp
+# ------------------------------------------------------------
+*.log
+logs/
+tmp/
+temp/
+.cache/
+
+# ------------------------------------------------------------
+# Test & Coverage Reports
+# ------------------------------------------------------------
+backend/target/surefire-reports/
+coverage/
+.nyc_output/
+*.lcov
