@@ -77,8 +77,11 @@ spring:
       on-profile: local
   datasource:
     url: ${DATABASE_URL:jdbc:postgresql://localhost:5433/pulsecheck}
-    username: ${DATABASE_USERNAME:change_me}
-    password: ${DATABASE_PASSWORD:change_me}
+    username: ${DATABASE_USERNAME:pulsecheck}
+    password: ${DATABASE_PASSWORD:pulsecheck123}
+
+jwt:
+  secret: ${JWT_SECRET:local-dev-secret-key-must-be-at-least-256-bits-long-do-not-use-in-prod}
   data:
     redis:
       host: localhost
