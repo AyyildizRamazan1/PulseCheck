@@ -1,5 +1,8 @@
 package com.pulsecheck.monitor.controller;
 
+import com.pulsecheck.auth.entity.User;
+import com.pulsecheck.auth.repository.UserRepository;
+import com.pulsecheck.common.exception.ResourceNotFoundException;
 import com.pulsecheck.monitor.entity.Monitor;
 import com.pulsecheck.monitor.repository.MonitorRepository;
 import io.swagger.v3.oas.annotations.Operation;
@@ -25,13 +28,16 @@ import java.util.UUID;
 public class MonitorController {
 
     private final MonitorRepository monitorRepository;
+    private final UserRepository userRepository;
 
     @Operation(summary = "Create a new monitor", description = "Creates a new monitoring configuration")
     @PostMapping
     public ResponseEntity<Monitor> createMonitor(
             @RequestBody Monitor monitor,
             @AuthenticationPrincipal UserDetails userDetails) {
-        log.info("Creating monitor for user: {}", userDetails.getUsername());
+        User user = userRepository.findByUsername(userDetails.getUsername())
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+        monitor.setUser(user);
         Monitor savedMonitor = monitorRepository.save(monitor);
         return ResponseEntity.ok(savedMonitor);
     }
@@ -41,9 +47,9 @@ public class MonitorController {
     public ResponseEntity<Page<Monitor>> getAllMonitors(
             @AuthenticationPrincipal UserDetails userDetails,
             Pageable pageable) {
-        log.info("Fetching monitors for user: {}", userDetails.getUsername());
-        // TODO: Filter by user ID after implementing user association
-        Page<Monitor> monitors = monitorRepository.findAll(pageable);
+        User user = userRepository.findByUsername(userDetails.getUsername())
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+        Page<Monitor> monitors = monitorRepository.findByUserId(user.getId(), pageable);
         return ResponseEntity.ok(monitors);
     }
 
