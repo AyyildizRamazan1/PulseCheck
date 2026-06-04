@@ -3,7 +3,9 @@ package com.pulsecheck.auth.service;
 import com.pulsecheck.auth.dto.LoginRequest;
 import com.pulsecheck.auth.dto.LoginResponse;
 import com.pulsecheck.auth.dto.RegisterRequest;
+import com.pulsecheck.auth.entity.Role;
 import com.pulsecheck.auth.entity.User;
+import com.pulsecheck.auth.repository.RoleRepository;
 import com.pulsecheck.auth.repository.UserRepository;
 import com.pulsecheck.auth.service.PasswordService;
 import com.pulsecheck.common.exception.ResourceNotFoundException;
@@ -19,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.Set;
 
 @Slf4j
 @Service
@@ -29,6 +32,7 @@ public class AuthenticationService {
     private final JwtTokenProvider tokenProvider;
     private final UserRepository userRepository;
     private final PasswordService passwordService;
+    private final RoleRepository roleRepository;
 
     @Transactional
     public void register(RegisterRequest registerRequest) {
@@ -36,19 +40,25 @@ public class AuthenticationService {
             throw new RuntimeException("Email already exists");
         }
 
-        if (userRepository.existsByUsername(registerRequest.getEmail())) {
+        if (userRepository.existsByUsername(registerRequest.getUsername())) {
             throw new RuntimeException("Username already exists");
         }
 
+        Role userRole = roleRepository.findByName("ROLE_USER")
+            .orElseThrow(() -> new RuntimeException("Default role not found"));
+
         User user = User.builder()
-            .username(registerRequest.getEmail())
+            .username(registerRequest.getUsername())
             .email(registerRequest.getEmail())
+            .firstName(registerRequest.getFirstName())
+            .lastName(registerRequest.getLastName())
             .password(passwordService.hashPassword(registerRequest.getPassword()))
             .enabled(true)
+            .roles(Set.of(userRole))
             .build();
 
         userRepository.save(user);
-        log.info("User registered successfully: {}", registerRequest.getEmail());
+        log.info("User registered successfully: {}", registerRequest.getUsername());
     }
 
     @Transactional
