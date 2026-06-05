@@ -44,9 +44,17 @@ public class MonitorService {
     public Monitor updateMonitor(UUID id, Monitor updated) {
         Monitor existing = monitorRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Monitor not found: " + id));
-        updated.setId(id);
-        updated.setUser(existing.getUser());
-        Monitor saved = monitorRepository.save(updated);
+        existing.setName(updated.getName());
+        existing.setUrl(updated.getUrl());
+        existing.setType(updated.getType() != null ? updated.getType() : existing.getType());
+        existing.setDescription(updated.getDescription());
+        existing.setHeaders(updated.getHeaders());
+        existing.setBody(updated.getBody());
+        existing.setExpectedStatusCode(updated.getExpectedStatusCode() != null ? updated.getExpectedStatusCode() : existing.getExpectedStatusCode());
+        existing.setTimeoutSeconds(updated.getTimeoutSeconds() != null ? updated.getTimeoutSeconds() : existing.getTimeoutSeconds());
+        existing.setCheckIntervalSeconds(updated.getCheckIntervalSeconds() != null ? updated.getCheckIntervalSeconds() : existing.getCheckIntervalSeconds());
+        existing.setEnabled(updated.getEnabled() != null ? updated.getEnabled() : existing.getEnabled());
+        Monitor saved = monitorRepository.save(existing);
         if (Boolean.TRUE.equals(saved.getEnabled())) {
             schedulerService.scheduleMonitor(saved);
         } else {

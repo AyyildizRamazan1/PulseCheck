@@ -1,5 +1,6 @@
 package com.pulsecheck.auth.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.pulsecheck.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -40,6 +41,7 @@ public class User extends BaseEntity implements UserDetails {
     @Builder.Default
     private boolean enabled = true;
 
+    @JsonIgnore
     @Column(nullable = false)
     private String password;
 
@@ -64,6 +66,7 @@ public class User extends BaseEntity implements UserDetails {
     private Set<Role> roles;
 
     @Override
+    @JsonIgnore
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return roles.stream()
                 .map(role -> new SimpleGrantedAuthority(role.getName()))

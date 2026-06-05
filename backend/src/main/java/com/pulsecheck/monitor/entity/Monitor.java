@@ -1,10 +1,10 @@
 package com.pulsecheck.monitor.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.pulsecheck.auth.entity.User;
 import com.pulsecheck.common.BaseEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -67,6 +67,7 @@ public class Monitor extends BaseEntity {
     @Builder.Default
     private Boolean enabled = true;
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
